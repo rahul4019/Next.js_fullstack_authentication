@@ -2,59 +2,53 @@
 
 import axios from 'axios';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
 
 const SignUpPage = () => {
+  const router = useRouter();
   const [user, setUser] = useState({
     email: '',
     password: '',
     username: '',
   });
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const onSignUp = async () => {};
+  useEffect(() => {
+    if (
+      user.email.length > 0 &&
+      user.password.length > 0 &&
+      user.username.length > 0
+    ) {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
+    }
+  }, [user]);
+
+  const onSignUp = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.post('/api/users/signup', user);
+      console.log('Signup success: ', res.data);
+
+      router.push('/login');
+    } catch (error: any) {
+      console.log('Signup failed: ', error.message);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
-    // <div className="flex flex-col items-center justify-center min-h-screen">
-    //   <h1 className="text-2xl">Signup</h1>
-    //   <hr />
-    //   <label htmlFor="username">username</label>
-    //   <input
-    //     type="text"
-    //     id="username"
-    //     className="border-2 p-2"
-    //     value={user.username}
-    //     onChange={(e) => setUser({ ...user, username: e.target.value })}
-    //   />
-    //   <label htmlFor="email">email</label>
-    //   <input
-    //     type="text"
-    //     id="email"
-    //     className="border-2 p-2"
-    //     value={user.email}
-    //     onChange={(e) => setUser({ ...user, email: e.target.value })}
-    //   />
-    //   <label htmlFor="password">password</label>
-    //   <input
-    //     type="text"
-    //     id="password"
-    //     className="border-2 p-2"
-    //     value={user.password}
-    //     onChange={(e) => setUser({ ...user, password: e.target.value })}
-    //   />
-    //   <button
-    //     className="rounded-lg bg-blue-600 p-2 mt-3 text-white hover:bg-blue-500"
-    //     onClick={() => {onSignUp}}
-    //   >
-    //     Signup
-    //   </button>
-    //   <Link href='/login' className='underline mt-2 cursor-pointer hover:text-blue-600'>Have an account?</Link>
-    // </div>
     <section>
       <div className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
         <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
           <div className="mb-2 flex justify-center"></div>
           <h2 className="text-center text-2xl font-bold leading-tight text-black">
-            Sign up to create account
+            {loading ? `Loading...` : `Sign up to create account`}
           </h2>
           <p className="mt-2 text-center text-base text-gray-600">
             Already have an account?
@@ -132,10 +126,12 @@ const SignUpPage = () => {
               <div>
                 <button
                   type="button"
-                  className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/80"
-                  onClick={() => {
-                    onSignUp;
-                  }}
+                  className={
+                    buttonDisabled
+                      ? 'inline-flex w-full items-center justify-center rounded-md bg-black opacity-25 px-3.5 py-2.5 font-semibold leading-7 text-white '
+                      : 'inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/80'
+                  }
+                  onClick={onSignUp}
                 >
                   Create Account
                 </button>
