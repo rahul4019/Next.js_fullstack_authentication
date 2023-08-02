@@ -2,23 +2,48 @@
 
 import axios from 'axios';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
 
 const LoginPage = () => {
+  const router = useRouter();
   const [user, setUser] = useState({
     email: '',
     password: '',
   });
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const onLogIn = async () => {};
+  useEffect(() => {
+    if (user.email.length > 0 && user.password.length > 0) {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
+    }
+  }, [user]);
+
+  const onLogIn = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.post('/api/users/login', user);
+      console.log('Login successful', res.data);
+      toast.success('Login successful');
+      router.push('/profile');
+    } catch (error: any) {
+      console.log('Login failed: ', error.message);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <section>
       <div className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
         <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
           <div className="mb-2 flex justify-center"></div>
           <h2 className="text-center text-2xl font-bold leading-tight text-black">
-            Sign in
+            {loading ? 'Loading...' : 'Sign in'}
           </h2>
           <p className="mt-2 text-center text-base text-gray-600">
             Don&apos;t have an account?
@@ -76,10 +101,12 @@ const LoginPage = () => {
               <div>
                 <button
                   type="button"
-                  className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/80"
-                  onClick={() => {
-                    onLogIn;
-                  }}
+                  className={
+                    buttonDisabled
+                      ? 'inline-flex w-full items-center justify-center rounded-md bg-black opacity-25 px-3.5 py-2.5 font-semibold leading-7 text-white '
+                      : 'inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/80'
+                  }
+                  onClick={onLogIn}
                 >
                   Login
                 </button>
