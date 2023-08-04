@@ -21,13 +21,11 @@ const ProfilePage = () => {
 
   const getUserDetails = async () => {
     const res = await axios.get('/api/users/me');
-    console.log(res.data);
-
+ 
     setData({
       ...res.data.user,
     });
-    console.log('Data: ', data);
-  };
+   };
 
   return (
     <div className="p-16">

@@ -9,8 +9,7 @@ export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
     const { token } = reqBody;
-    console.log('token: ', token);
-
+ 
     /* find the user based on matching token and whose token expiry time is
      greater than current time */
     const user = await User.findOne({
@@ -21,8 +20,7 @@ export async function POST(request: NextRequest) {
     if (!user)
       return NextResponse.json({ error: 'Invalid token' }, { status: 400 });
 
-    console.log('user: ', user)
-
+ 
     user.isVerified = true
     user.verfiryToken = undefined
     user.verfiyTokenExpiry = undefined

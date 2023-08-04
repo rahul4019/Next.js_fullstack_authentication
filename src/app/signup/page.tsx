@@ -32,11 +32,9 @@ const SignUpPage = () => {
     try {
       setLoading(true);
       const res = await axios.post('/api/users/signup', user);
-      console.log('Signup success: ', res.data);
 
       router.push('/login');
     } catch (error: any) {
-      console.log('Signup failed: ', error.message);
       toast.error(error.response.data.error);
     } finally {
       setLoading(false);

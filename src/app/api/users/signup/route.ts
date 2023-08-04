@@ -31,8 +31,7 @@ export async function POST(request: NextRequest) {
     });
 
     const savedUser = await newUser.save();
-    console.log('saved user: ', savedUser);
-
+ 
     // send verification email
     await sendEmail({ email, emailType: 'VERIFY', userId: savedUser._id });
 
@@ -42,7 +41,6 @@ export async function POST(request: NextRequest) {
       savedUser,
     });
   } catch (error: any) {
-    console.log(error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
