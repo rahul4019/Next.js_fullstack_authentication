@@ -31,9 +31,8 @@ const ResetPassword = () => {
       });
 
       toast.success(response.data.message);
-      router.push('/login')
+      router.push('/login');
     } catch (error: any) {
-      console.log(error);
       toast.error(error.message);
     }
   };
