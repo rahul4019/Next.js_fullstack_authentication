@@ -31,8 +31,7 @@ const LoginPage = () => {
       toast.success('Login successful');
       router.push('/');
     } catch (error: any) {
-      console.log('Login failed: ', error.message);
-      toast.error(error.message);
+      toast.error(error.response.data.error);
     } finally {
       setLoading(false);
     }

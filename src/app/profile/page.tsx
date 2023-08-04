@@ -15,8 +15,7 @@ const ProfilePage = () => {
       toast.success('Logout successful');
       router.push('/login');
     } catch (error: any) {
-      console.log(error.message);
-      toast.error(error.message);
+      toast.error(error.response.data.error);
     }
   };
 
