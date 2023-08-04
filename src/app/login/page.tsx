@@ -29,7 +29,7 @@ const LoginPage = () => {
       const res = await axios.post('/api/users/login', user);
       console.log('Login successful', res.data);
       toast.success('Login successful');
-      router.push('/profile');
+      router.push('/');
     } catch (error: any) {
       console.log('Login failed: ', error.message);
       toast.error(error.message);
@@ -84,6 +84,13 @@ const LoginPage = () => {
                   >
                     Password
                   </label>
+                  <Link
+                    href="#"
+                    title=""
+                    className="text-sm font-semibold text-black hover:underline"
+                  >
+                    Forgot password?
+                  </Link>
                 </div>
                 <div className="mt-2">
                   <input
